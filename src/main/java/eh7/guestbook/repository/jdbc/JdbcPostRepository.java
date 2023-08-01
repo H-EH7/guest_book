@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -46,7 +47,18 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public void update(Long postId, PostUpdateDto updateDto) {
+        String sql = "update post " +
+                "set author=:author, side=:side, relationship=:relationship, content=:content " +
+                "where id=:id";
 
+        SqlParameterSource param = new MapSqlParameterSource()
+                .addValue("author", updateDto.getAuthor())
+                .addValue("side", updateDto.getSide())
+                .addValue("relationship", updateDto.getRelationship())
+                .addValue("content", updateDto.getContent())
+                .addValue("id", postId);
+
+        template.update(sql, param);
     }
 
     @Override

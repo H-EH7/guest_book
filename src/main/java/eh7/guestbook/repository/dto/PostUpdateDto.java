@@ -24,4 +24,11 @@ public class PostUpdateDto {
         this.relationship = post.getRelationship().getLabel();
         this.content = post.getContent();
     }
+
+    public PostUpdateDto(String author, String side, String relationship, String content) {
+        this.author = author;
+        this.side = side;
+        this.relationship = relationship;
+        this.content = content;
+    }
 }
