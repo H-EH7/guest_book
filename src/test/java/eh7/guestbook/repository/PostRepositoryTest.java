@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -46,7 +49,7 @@ class PostRepositoryTest {
     @Test
     void update() {
         // given
-        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트1입니다.");
+        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트입니다..");
         Post savedPost = postRepository.save(post);
         Long postId = savedPost.getId();
 
@@ -66,9 +69,49 @@ class PostRepositoryTest {
     }
 
     @Test
+    void findAll() {
+        // given
+        Post post1 = new Post("userA-1", "1111", Side.GROOM, Relationship.FAMILY, "테스트입니다.");
+        Post post2 = new Post("userA-2", "1111", Side.BRIDE, Relationship.FRIEND, "테스트입니다.");
+        Post post3 = new Post("userB-1", "1111", Side.GROOM, Relationship.ETC, "테스트입니다.");
+
+        postRepository.save(post1);
+        postRepository.save(post2);
+        postRepository.save(post3);
+
+        // 셋 다 없을 때
+        findAllValidate("", "", "", post1, post2, post3);
+
+        // author만 있을 때
+        findAllValidate("userA", "", "", post1, post2);
+        // side만 있을 때
+        findAllValidate("", Side.GROOM.getLabel(), "", post1, post3);
+        // relationship만 있을 때
+        findAllValidate("", "", Relationship.FRIEND.getLabel(), post2);
+
+        // author, side
+        findAllValidate("userA", Side.BRIDE.getLabel(), "", post2);
+        // author, relationship
+        findAllValidate("userA", "", Relationship.FAMILY.getLabel(), post1);
+        // side, relationship
+        findAllValidate("", Side.GROOM.getLabel(), Relationship.ETC.getLabel(), post3);
+
+        // 셋 다 있을 때
+        findAllValidate("userA", Side.GROOM.getLabel(), Relationship.FAMILY.getLabel(), post1);
+
+        // 없는 값을 찾을 때
+        findAllValidate("userC", "", "");
+    }
+
+    void findAllValidate(String author, String side, String relationship, Post... posts) {
+        List<Post> result = postRepository.findAll(new PostSearchCond(author, side, relationship));
+        assertThat(result).containsExactly(posts);
+    }
+
+    @Test
     void delete() {
         // given
-        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트1입니다.");
+        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트입니다.");
         Post savedPost = postRepository.save(post);
         Long postId = savedPost.getId();
 

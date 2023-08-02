@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -76,7 +77,48 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findAll(PostSearchCond cond) {
-        return null;
+        String author = cond.getAuthor();
+        String side = cond.getSide();
+        String relationship = cond.getRelationship();
+
+        boolean authorFlag = StringUtils.hasText(author);
+        boolean sideFlag = StringUtils.hasText(side);
+        boolean relationshipFlag = StringUtils.hasText(relationship);
+
+        String sql = "select id, author, password, side, relationship, content from post";
+
+        // 동적 쿼리 =========================================
+        // 하나라도 값이 있을 경우
+        if (authorFlag || sideFlag || relationshipFlag) {
+            sql += " where";
+        }
+
+        boolean andFlag = false;
+
+        if (authorFlag) {
+            sql += " author like concat('%', :author, '%')";
+            andFlag = true;
+        }
+
+        if (sideFlag) {
+            if (andFlag) {
+                sql += " and";
+            } else {
+                andFlag = true;
+            }
+            sql += " side=:side";
+        }
+
+        if (relationshipFlag) {
+            if (andFlag) {
+                sql += " and";
+            }
+            sql += " relationship=:relationship";
+        }
+        // 동적 쿼리 끝 =====================================
+
+        SqlParameterSource param = new BeanPropertySqlParameterSource(cond);
+        return template.query(sql, param, postRowMapper());
     }
 
     //TODO: 비밀번호 검증은 Service 계층에서
