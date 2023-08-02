@@ -64,4 +64,20 @@ class PostRepositoryTest {
         assertThat(findPost.getRelationship().getLabel()).isEqualTo(updateDto.getRelationship());
         assertThat(findPost.getContent()).isEqualTo(updateDto.getContent());
     }
+
+    @Test
+    void delete() {
+        // given
+        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트1입니다.");
+        Post savedPost = postRepository.save(post);
+        Long postId = savedPost.getId();
+
+        // when
+        Boolean result1 = postRepository.delete(postId);
+        Boolean result2 = postRepository.delete(58L);
+
+        // then
+        assertThat(result1).isTrue();
+        assertThat(result2).isFalse();
+    }
 }

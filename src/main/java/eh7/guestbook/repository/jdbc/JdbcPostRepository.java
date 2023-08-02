@@ -45,6 +45,7 @@ public class JdbcPostRepository implements PostRepository {
         return post;
     }
 
+    //TODO: 비밀번호 검증은 Service 계층에서
     @Override
     public void update(Long postId, PostUpdateDto updateDto) {
         String sql = "update post " +
@@ -78,9 +79,19 @@ public class JdbcPostRepository implements PostRepository {
         return null;
     }
 
+    //TODO: 비밀번호 검증은 Service 계층에서
     @Override
-    public Boolean delete(Long postId, String pwd) {
-        return null;
+    public Boolean delete(Long postId) {
+
+        // 테이블에 없는 id 값인 경우
+        if (findById(postId).isEmpty()) {
+            return false;
+        }
+
+        String sql = "delete from post where id=:id";
+        SqlParameterSource param = new MapSqlParameterSource("id", postId);
+        template.update(sql, param);
+        return true;
     }
 
     private RowMapper<Post> postRowMapper() {
