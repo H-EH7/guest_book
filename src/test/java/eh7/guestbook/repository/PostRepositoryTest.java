@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -117,9 +118,11 @@ class PostRepositoryTest {
 
         // when
         Boolean result1 = postRepository.delete(postId);
-        Boolean result2 = postRepository.delete(58L);
+        Boolean result2 = postRepository.delete(postId);
+        Optional<Post> findPost = postRepository.findById(postId);
 
         // then
+        assertThat(findPost.isEmpty()).isTrue();
         assertThat(result1).isTrue();
         assertThat(result2).isFalse();
     }

@@ -9,6 +9,7 @@ import eh7.guestbook.repository.dto.PostSaveDto;
 import eh7.guestbook.repository.dto.PostUpdateDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -46,7 +47,6 @@ public class JdbcPostRepository implements PostRepository {
         return post;
     }
 
-    //TODO: 비밀번호 검증은 Service 계층에서
     @Override
     public void update(Long postId, PostUpdateDto updateDto) {
         String sql = "update post " +
@@ -121,10 +121,8 @@ public class JdbcPostRepository implements PostRepository {
         return template.query(sql, param, postRowMapper());
     }
 
-    //TODO: 비밀번호 검증은 Service 계층에서
     @Override
-    public Boolean delete(Long postId) {
-
+    public boolean delete(Long postId) {
         // 테이블에 없는 id 값인 경우
         if (findById(postId).isEmpty()) {
             return false;

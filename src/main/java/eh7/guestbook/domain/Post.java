@@ -2,6 +2,7 @@ package eh7.guestbook.domain;
 
 import lombok.Data;
 
+// TODO: side와 relationship을 Enum으로 사용하는게 맞는지? -> 해결 방안 생각
 /**
  * 게시글 클래스
  */
