@@ -1,13 +1,10 @@
 package eh7.guestbook.repository.jdbc;
 
 import eh7.guestbook.domain.Post;
-import eh7.guestbook.domain.Relationship;
-import eh7.guestbook.domain.Side;
 import eh7.guestbook.repository.PostRepository;
 import eh7.guestbook.repository.PostSearchCond;
 import eh7.guestbook.repository.dto.PostSaveDto;
 import eh7.guestbook.repository.dto.PostUpdateDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Slf4j
 @Repository
 public class JdbcPostRepository implements PostRepository {
 
@@ -135,16 +131,6 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     private RowMapper<Post> postRowMapper() {
-        // side와 relationship row 값을 enum으로 변경 후 맵핑
-        return (rs, rowNum) -> {
-            Post post = new Post();
-            post.setId(rs.getLong("id"));
-            post.setAuthor(rs.getString("author"));
-            post.setPassword(rs.getString("password"));
-            post.setSide(Side.valueOfLabel(rs.getString("side")));
-            post.setRelationship(Relationship.valueOfLabel(rs.getString("relationship")));
-            post.setContent(rs.getString("content"));
-            return post;
-        };
+        return BeanPropertyRowMapper.newInstance(Post.class);
     }
 }

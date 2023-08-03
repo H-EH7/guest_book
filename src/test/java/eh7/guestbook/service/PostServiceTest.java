@@ -1,13 +1,12 @@
 package eh7.guestbook.service;
 
 import eh7.guestbook.domain.Post;
-import eh7.guestbook.domain.Relationship;
-import eh7.guestbook.domain.Side;
+import eh7.guestbook.domain.consts.RelationshipConst;
+import eh7.guestbook.domain.consts.SideConst;
 import eh7.guestbook.repository.PostRepository;
 import eh7.guestbook.repository.PostSearchCond;
 import eh7.guestbook.repository.dto.PostUpdateDto;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -30,7 +28,7 @@ class PostServiceTest {
     @Test
     void post() {
         // given
-        Post post = new Post("test", "1111", Side.GROOM, Relationship.FAMILY, "테스트입니다.");
+        Post post = new Post("test", "1111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트입니다.");
 
         // when
         Post result = postService.post(post);
@@ -46,19 +44,21 @@ class PostServiceTest {
     @Test
     void edit() {
         // given
-        Post post = postRepository.save(new Post("test", "1111", Side.GROOM, Relationship.FAMILY, "테스트입니다."));
-        PostUpdateDto updateDto = new PostUpdateDto("test1", Side.GROOM.getLabel(), Relationship.FRIEND.getLabel(), "변경된 콘텐츠입니다.");
-        PostUpdateDto updateDtoFalse = new PostUpdateDto("test2", Side.BRIDE.getLabel(), Relationship.ETC.getLabel(), "비밀번호가 틀린 경우입니다.");
+        Post post = postRepository.save(new Post("test", "1111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트입니다."));
+        PostUpdateDto updateDto = new PostUpdateDto("test1", SideConst.GROOM, RelationshipConst.FRIEND, "변경된 콘텐츠입니다.");
+        PostUpdateDto updateDtoFalse = new PostUpdateDto("test2", SideConst.BRIDE, RelationshipConst.ETC, "비밀번호가 틀린 경우입니다.");
+        updateDto.setPassword("1111");
+        updateDtoFalse.setPassword("2222");
 
         // when
-        boolean resultA = postService.edit(post.getId(), updateDto, "1111");
-        boolean resultB = postService.edit(post.getId(), updateDtoFalse, "2222");
+        boolean resultA = postService.edit(post.getId(), updateDto);
+        boolean resultB = postService.edit(post.getId(), updateDtoFalse);
 
         // then
         Post findPost = postRepository.findById(post.getId()).get();
         assertThat(findPost.getAuthor()).isEqualTo(updateDto.getAuthor());
-        assertThat(findPost.getSide().getLabel()).isEqualTo(updateDto.getSide());
-        assertThat(findPost.getRelationship().getLabel()).isEqualTo(updateDto.getRelationship());
+        assertThat(findPost.getSide()).isEqualTo(updateDto.getSide());
+        assertThat(findPost.getRelationship()).isEqualTo(updateDto.getRelationship());
         assertThat(findPost.getContent()).isEqualTo(updateDto.getContent());
 
         assertThat(resultA).isTrue();
@@ -68,9 +68,9 @@ class PostServiceTest {
     @Test
     void findAll() {
         // given
-        Post postA = postRepository.save(new Post("testA-1", "1111", Side.GROOM, Relationship.FAMILY, "테스트1입니다."));
-        Post postB = postRepository.save(new Post("testB-1", "2222", Side.BRIDE, Relationship.ETC, "테스트2입니다."));
-        Post postC = postRepository.save(new Post("testB-2", "3333", Side.GROOM, Relationship.COLLEAGUE, "테스트3입니다."));
+        Post postA = postRepository.save(new Post("testA-1", "1111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트1입니다."));
+        Post postB = postRepository.save(new Post("testB-1", "2222", SideConst.BRIDE, RelationshipConst.ETC, "테스트2입니다."));
+        Post postC = postRepository.save(new Post("testB-2", "3333", SideConst.GROOM, RelationshipConst.COLLEAGUE, "테스트3입니다."));
 
         // 셋 다 없을 때
         findAllValidate("", "", "", postA, postB, postC);
@@ -78,22 +78,22 @@ class PostServiceTest {
         // author만 있을 때
         findAllValidate("testB", "", "", postB, postC);
         // side만 있을 때
-        findAllValidate("", Side.GROOM.getLabel(), "", postA, postC);
+        findAllValidate("", SideConst.GROOM, "", postA, postC);
         // relationship만 있을 때
-        findAllValidate("", "", Relationship.COLLEAGUE.getLabel(), postC);
+        findAllValidate("", "", RelationshipConst.COLLEAGUE, postC);
 
         // author, side
-        findAllValidate("testB", Side.BRIDE.getLabel(), "", postB);
+        findAllValidate("testB", SideConst.BRIDE, "", postB);
         // author, relationship
-        findAllValidate("testA", "", Relationship.FAMILY.getLabel(), postA);
+        findAllValidate("testA", "", RelationshipConst.FAMILY, postA);
         // side, relationship
-        findAllValidate("", Side.BRIDE.getLabel(), Relationship.ETC.getLabel(), postB);
+        findAllValidate("", SideConst.BRIDE, RelationshipConst.ETC, postB);
 
         // 셋 다 있을 때
-        findAllValidate("testB", Side.GROOM.getLabel(), Relationship.COLLEAGUE.getLabel(), postC);
+        findAllValidate("testB", SideConst.GROOM, RelationshipConst.COLLEAGUE, postC);
 
         // 없는 값을 찾을 때
-        findAllValidate("testC", Side.BRIDE.getLabel(), Relationship.FRIEND.getLabel());
+        findAllValidate("testC", SideConst.BRIDE, RelationshipConst.FRIEND);
     }
 
     void findAllValidate(String author, String side, String relationship, Post... posts) {
@@ -104,7 +104,7 @@ class PostServiceTest {
     @Test
     void delete() {
         // given
-        Post post = postRepository.save(new Post("test", "1111", Side.GROOM, Relationship.FAMILY, "테스트입니다."));
+        Post post = postRepository.save(new Post("test", "1111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트입니다."));
 
         // when
         boolean resultA = postService.delete(post.getId(), "2222");

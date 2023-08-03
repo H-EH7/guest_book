@@ -22,8 +22,8 @@ public class PostSaveDto {
     public PostSaveDto(Post post) {
         this.author = post.getAuthor();
         this.password = post.getPassword();
-        this.side = post.getSide().getLabel();
-        this.relationship = post.getRelationship().getLabel();
+        this.side = post.getSide();
+        this.relationship = post.getRelationship();
         this.content = post.getContent();
     }
 }

@@ -1,8 +1,8 @@
 package eh7.guestbook.repository;
 
 import eh7.guestbook.domain.Post;
-import eh7.guestbook.domain.Relationship;
-import eh7.guestbook.domain.Side;
+import eh7.guestbook.domain.consts.RelationshipConst;
+import eh7.guestbook.domain.consts.SideConst;
 import eh7.guestbook.repository.dto.PostUpdateDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,8 +29,8 @@ class PostRepositoryTest {
     @Test
     void save() {
         // given
-        Post post1 = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트1입니다.");
-        Post post2 = new Post("test2", "test222", Side.BRIDE, Relationship.FRIEND, "테스트2입니다.");
+        Post post1 = new Post("test1", "test111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트1입니다.");
+        Post post2 = new Post("test2", "test222", SideConst.BRIDE, RelationshipConst.FRIEND, "테스트2입니다.");
 
         // when
         Post savedPost1 = postRepository.save(post1);
@@ -50,12 +49,12 @@ class PostRepositoryTest {
     @Test
     void update() {
         // given
-        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트입니다..");
+        Post post = new Post("test1", "test111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트입니다..");
         Post savedPost = postRepository.save(post);
         Long postId = savedPost.getId();
 
         // when
-        PostUpdateDto updateDto = new PostUpdateDto("changed", Side.BRIDE.getLabel(), Relationship.ETC.getLabel(), "변경된 콘텐츠입니다.");
+        PostUpdateDto updateDto = new PostUpdateDto("changed", SideConst.BRIDE, RelationshipConst.ETC, "변경된 콘텐츠입니다.");
         postRepository.update(postId, updateDto);
 
         // then
@@ -64,17 +63,17 @@ class PostRepositoryTest {
         log.info("post = {}", savedPost);
         log.info("updated post = {}", findPost);
         assertThat(findPost.getAuthor()).isEqualTo(updateDto.getAuthor());
-        assertThat(findPost.getSide().getLabel()).isEqualTo(updateDto.getSide());
-        assertThat(findPost.getRelationship().getLabel()).isEqualTo(updateDto.getRelationship());
+        assertThat(findPost.getSide()).isEqualTo(updateDto.getSide());
+        assertThat(findPost.getRelationship()).isEqualTo(updateDto.getRelationship());
         assertThat(findPost.getContent()).isEqualTo(updateDto.getContent());
     }
 
     @Test
     void findAll() {
         // given
-        Post post1 = new Post("userA-1", "1111", Side.GROOM, Relationship.FAMILY, "테스트입니다.");
-        Post post2 = new Post("userA-2", "1111", Side.BRIDE, Relationship.FRIEND, "테스트입니다.");
-        Post post3 = new Post("userB-1", "1111", Side.GROOM, Relationship.ETC, "테스트입니다.");
+        Post post1 = new Post("userA-1", "1111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트입니다.");
+        Post post2 = new Post("userA-2", "1111", SideConst.BRIDE, RelationshipConst.FRIEND, "테스트입니다.");
+        Post post3 = new Post("userB-1", "1111", SideConst.GROOM, RelationshipConst.ETC, "테스트입니다.");
 
         postRepository.save(post1);
         postRepository.save(post2);
@@ -86,19 +85,19 @@ class PostRepositoryTest {
         // author만 있을 때
         findAllValidate("userA", "", "", post1, post2);
         // side만 있을 때
-        findAllValidate("", Side.GROOM.getLabel(), "", post1, post3);
+        findAllValidate("", SideConst.GROOM, "", post1, post3);
         // relationship만 있을 때
-        findAllValidate("", "", Relationship.FRIEND.getLabel(), post2);
+        findAllValidate("", "", RelationshipConst.FRIEND, post2);
 
         // author, side
-        findAllValidate("userA", Side.BRIDE.getLabel(), "", post2);
+        findAllValidate("userA", SideConst.BRIDE, "", post2);
         // author, relationship
-        findAllValidate("userA", "", Relationship.FAMILY.getLabel(), post1);
+        findAllValidate("userA", "", RelationshipConst.FAMILY, post1);
         // side, relationship
-        findAllValidate("", Side.GROOM.getLabel(), Relationship.ETC.getLabel(), post3);
+        findAllValidate("", SideConst.GROOM, RelationshipConst.ETC, post3);
 
         // 셋 다 있을 때
-        findAllValidate("userA", Side.GROOM.getLabel(), Relationship.FAMILY.getLabel(), post1);
+        findAllValidate("userA", SideConst.GROOM, RelationshipConst.FAMILY, post1);
 
         // 없는 값을 찾을 때
         findAllValidate("userC", "", "");
@@ -112,7 +111,7 @@ class PostRepositoryTest {
     @Test
     void delete() {
         // given
-        Post post = new Post("test1", "test111", Side.GROOM, Relationship.FAMILY, "테스트입니다.");
+        Post post = new Post("test1", "test111", SideConst.GROOM, RelationshipConst.FAMILY, "테스트입니다.");
         Post savedPost = postRepository.save(post);
         Long postId = savedPost.getId();
 

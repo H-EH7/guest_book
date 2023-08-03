@@ -1,7 +1,5 @@
 package eh7.guestbook.repository;
 
-import eh7.guestbook.domain.Relationship;
-import eh7.guestbook.domain.Side;
 import lombok.Data;
 
 /**
