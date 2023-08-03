@@ -31,27 +31,97 @@
 ## 🚪 REST API Reference
 
 ### `GET`
+> `/posts` : 게시글 조회<br>
+> - queryParam
+> 1. author : 작성자 이름
+> 2. side : 신랑 또는 신부
+> 3. relationship : 관계 (가족, 친구, 직장동료, 지인)
+> 
+> ex) /posts?author=EH7&side=신랑&relationship=가족
 
 ### `POST`
+> `/posts` : 게시글 작성<br>
+> - Request Body
+> 1. author : 작성자 이름
+> 2. password : 게시글 비밀번호
+> 3. side : 신랑 또는 신부
+> 4. relationship : 관계 (가족, 친구, 직장동료, 지인)
+> 5. content : 게시글 내용
+> 
+> ex)
+> ```json
+> {
+>   "author": "작성자",
+>   "password": "비밀번호",
+>   "side": "신랑",
+>   "relationship": "직장동료",
+>   "content": "게시글 내용"
+> }
+> ```
 
 ### `PATCH`
+> `/posts/{postId}` : 게시글 수정<br>
+> - Request Body
+> 1. author : 수정할 작성자 이름
+> 2. password : 게시글 비밀번호
+> 3. side : 수정할 신랑 또는 신부
+> 4. relationship : 수정할 관계 (가족, 친구, 직장동료, 지인)
+> 5. content : 수정할 게시글 내용
+> 
+> ex)
+> ```json
+> {
+>   "author": "작성자",
+>   "password": "비밀번호",
+>   "side": "신랑",
+>   "relationship": "직장동료",
+>   "content": "게시글 내용"
+> }
+> ```
 
 ### `DELETE`
+> `/posts/{postId}` : 게시글 수정<br>
+> - Request Body
+> 
+>   비밀번호
+> 
+> ex)
+> ```json
+> 비밀번호
+> ```
 
 ----------
 
 ## 🗂 패키지 구조
 
-> - main
->   - java
->     - eh7
->       - guestbook
->         - config
->         - controller
->         - domain
->         - repository
->           - dto
->           - jdbc
->         - service
+```bash
+  eh7
+    └─guestbook
+        │  GuestbookApplication.java
+        │  
+        ├─controller
+        │     PostController.java
+        │      
+        ├─domain
+        │  │  Post.java
+        │  │  
+        │  └─consts
+        │       RelationshipConst.java
+        │       SideConst.java
+        │          
+        ├─repository
+        │  │  PostRepository.java
+        │  │  PostSearchCond.java
+        │  │  
+        │  ├─dto
+        │  │    PostSaveDto.java
+        │  │    PostUpdateDto.java
+        │  │      
+        │  └─jdbc
+        │       JdbcPostRepository.java
+        │          
+        └─service
+              PostService.java
+```
 
 ----------
