@@ -3,7 +3,6 @@ package eh7.guestbook.repository.jdbc;
 import eh7.guestbook.domain.Post;
 import eh7.guestbook.repository.PostRepository;
 import eh7.guestbook.repository.PostSearchCond;
-import eh7.guestbook.repository.dto.PostSaveDto;
 import eh7.guestbook.repository.dto.PostUpdateDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -36,8 +35,7 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public Post save(Post post) {
-        PostSaveDto postSaveDto = new PostSaveDto(post); // 저장을 위한 DTO 생성
-        SqlParameterSource param = new BeanPropertySqlParameterSource(postSaveDto);
+        SqlParameterSource param = new BeanPropertySqlParameterSource(post);
         Number key = jdbcInsert.executeAndReturnKey(param); // PK 값
         post.setId(key.longValue());
         return post;
