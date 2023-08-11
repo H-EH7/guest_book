@@ -18,8 +18,9 @@ public class PostUpdateDto {
     public PostUpdateDto() {
     }
 
-    public PostUpdateDto(String author, String side, String relationship, String content) {
+    public PostUpdateDto(String author, String password, String side, String relationship, String content) {
         this.author = author;
+        this.password = password;
         this.side = side;
         this.relationship = relationship;
         this.content = content;

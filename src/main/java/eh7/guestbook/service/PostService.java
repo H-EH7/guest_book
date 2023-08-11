@@ -19,38 +19,24 @@ public class PostService {
     private final PostRepository postRepository;
 
     public Post post(Post post) {
-        try {
-            constValidate(post.getSide(), post.getRelationship());
-            return postRepository.save(post);
-        } catch (WrongConstException e) {
-            return null;
-        }
+        constValidate(post.getSide(), post.getRelationship());
+        return postRepository.save(post);
     }
 
     public boolean edit(Long postId, PostUpdateDto updateDto) {
-        try {
-            passwordValidate(postId, updateDto.getPassword());
-            constValidate(updateDto.getSide(), updateDto.getRelationship());
-            postRepository.update(postId, updateDto);
-            return true;
-        } catch (WrongPasswordException e) {
-            return false;
-        } catch (WrongConstException e) {
-            return false;
-        }
+        passwordValidate(postId, updateDto.getPassword());
+        constValidate(updateDto.getSide(), updateDto.getRelationship());
+        postRepository.update(postId, updateDto);
+        return true;
     }
 
     public List<Post> findAll(PostSearchCond cond) {
-            return postRepository.findAll(cond);
+        return postRepository.findAll(cond);
     }
 
     public boolean delete(Long postId, String password) {
-        try {
-            passwordValidate(postId, password);
-            return postRepository.delete(postId);
-        } catch (WrongPasswordException e) {
-            return false;
-        }
+        passwordValidate(postId, password);
+        return postRepository.delete(postId);
     }
 
     private void passwordValidate(Long postId, String password) {

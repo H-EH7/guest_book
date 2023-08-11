@@ -54,7 +54,7 @@ class PostRepositoryTest {
         Long postId = savedPost.getId();
 
         // when
-        PostUpdateDto updateDto = new PostUpdateDto("changed", SideConst.BRIDE, RelationshipConst.ETC, "변경된 콘텐츠입니다.");
+        PostUpdateDto updateDto = new PostUpdateDto("changed", "test111", SideConst.BRIDE, RelationshipConst.ETC, "변경된 콘텐츠입니다.");
         postRepository.update(postId, updateDto);
 
         // then

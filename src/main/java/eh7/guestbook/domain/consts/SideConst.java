@@ -1,6 +1,5 @@
 package eh7.guestbook.domain.consts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SideConst {
@@ -10,6 +9,8 @@ public class SideConst {
     private static final List list = List.of(GROOM, BRIDE);
 
     public static boolean notContain(String text) {
-        return list.contains(text);
+        return list.stream().noneMatch(param -> {
+            return param.equals(text);
+        });
     }
 }

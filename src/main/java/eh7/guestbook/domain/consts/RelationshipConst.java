@@ -11,6 +11,8 @@ public class RelationshipConst {
     private static final List list = List.of(FAMILY, FRIEND, COLLEAGUE, ETC);
 
     public static boolean notContain(String text) {
-        return list.contains(text);
+        return list.stream().noneMatch(param -> {
+            return param.equals(text);
+        });
     }
 }
