@@ -1,6 +1,7 @@
 package eh7.guestbook.repository.jdbc;
 
 import eh7.guestbook.domain.Post;
+import eh7.guestbook.exception.IllegalIdException;
 import eh7.guestbook.repository.PostRepository;
 import eh7.guestbook.repository.PostSearchCond;
 import eh7.guestbook.repository.dto.PostUpdateDto;
@@ -65,7 +66,7 @@ public class JdbcPostRepository implements PostRepository {
             Post post = template.queryForObject(sql, param, postRowMapper());
             return Optional.of(post);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            throw new IllegalIdException(e);
         }
     }
 
@@ -116,16 +117,10 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     @Override
-    public boolean delete(Long postId) {
-        // 테이블에 없는 id 값인 경우
-        if (findById(postId).isEmpty()) {
-            return false;
-        }
-
+    public void delete(Long postId) {
         String sql = "delete from post where id=:id";
         SqlParameterSource param = new MapSqlParameterSource("id", postId);
         template.update(sql, param);
-        return true;
     }
 
     private RowMapper<Post> postRowMapper() {

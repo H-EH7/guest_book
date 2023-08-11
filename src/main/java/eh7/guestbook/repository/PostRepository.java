@@ -43,6 +43,6 @@ public interface PostRepository {
      * @param postId 삭제할 게시글의 ID
      * @return 삭제 성공 여부 반환
      */
-    boolean delete(Long postId);
+    void delete(Long postId);
 
 }

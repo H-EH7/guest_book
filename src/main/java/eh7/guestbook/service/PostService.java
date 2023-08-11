@@ -3,8 +3,8 @@ package eh7.guestbook.service;
 import eh7.guestbook.domain.Post;
 import eh7.guestbook.domain.consts.RelationshipConst;
 import eh7.guestbook.domain.consts.SideConst;
-import eh7.guestbook.exception.WrongConstException;
-import eh7.guestbook.exception.WrongPasswordException;
+import eh7.guestbook.exception.IllegalConstException;
+import eh7.guestbook.exception.IllegalPasswordException;
 import eh7.guestbook.repository.PostRepository;
 import eh7.guestbook.repository.PostSearchCond;
 import eh7.guestbook.repository.dto.PostUpdateDto;
@@ -23,33 +23,32 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public boolean edit(Long postId, PostUpdateDto updateDto) {
+    public void edit(Long postId, PostUpdateDto updateDto) {
         passwordValidate(postId, updateDto.getPassword());
         constValidate(updateDto.getSide(), updateDto.getRelationship());
         postRepository.update(postId, updateDto);
-        return true;
     }
 
     public List<Post> findAll(PostSearchCond cond) {
         return postRepository.findAll(cond);
     }
 
-    public boolean delete(Long postId, String password) {
+    public void delete(Long postId, String password) {
         passwordValidate(postId, password);
-        return postRepository.delete(postId);
+        postRepository.delete(postId);
     }
 
     private void passwordValidate(Long postId, String password) {
         Post post = postRepository.findById(postId).get();
         if (!post.getPassword().equals(password)) {
-            throw new WrongPasswordException();
+            throw new IllegalPasswordException();
         }
     }
 
     private void constValidate(String side, String relationship) {
         if (SideConst.notContain(side)
                 || RelationshipConst.notContain(relationship)) {
-            throw new WrongConstException();
+            throw new IllegalConstException();
         }
     }
 }

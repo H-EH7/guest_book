@@ -34,21 +34,13 @@ public class PostController {
 
     @PatchMapping("/{postId}")
     public String editPost(@PathVariable Long postId, @RequestBody PostUpdateDto updateDto) {
-        boolean editFlag = postService.edit(postId, updateDto);
-        if (editFlag) {
-            return "ok";
-        } else {
-            return "fail";
-        }
+        postService.edit(postId, updateDto);
+        return "ok";
     }
 
     @DeleteMapping("/{postId}")
     public String deletePost(@PathVariable Long postId, @RequestBody String password) {
-        boolean deleteFlag = postService.delete(postId, password);
-        if (deleteFlag) {
-            return "ok";
-        } else {
-            return "fail";
-        }
+        postService.delete(postId, password);
+        return "ok";
     }
 }

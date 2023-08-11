@@ -3,6 +3,7 @@ package eh7.guestbook.repository;
 import eh7.guestbook.domain.Post;
 import eh7.guestbook.domain.consts.RelationshipConst;
 import eh7.guestbook.domain.consts.SideConst;
+import eh7.guestbook.exception.IllegalIdException;
 import eh7.guestbook.repository.dto.PostUpdateDto;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -116,13 +116,11 @@ class PostRepositoryTest {
         Long postId = savedPost.getId();
 
         // when
-        Boolean result1 = postRepository.delete(postId);
-        Boolean result2 = postRepository.delete(postId);
-        Optional<Post> findPost = postRepository.findById(postId);
+        postRepository.delete(postId);
 
         // then
-        assertThat(findPost.isEmpty()).isTrue();
-        assertThat(result1).isTrue();
-        assertThat(result2).isFalse();
+        assertThatThrownBy(() -> {
+            postRepository.findById(postId);
+        }).isInstanceOf(IllegalIdException.class);
     }
 }
