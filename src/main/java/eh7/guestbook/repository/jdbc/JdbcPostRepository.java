@@ -45,7 +45,7 @@ public class JdbcPostRepository implements PostRepository {
     @Override
     public void update(Long postId, PostUpdateDto updateDto) {
         String sql = "update post " +
-                "set author=:author, side=:side, relationship=:relationship, content=:content " +
+                "set author=:author, side=:side, relationship=:relationship, content=:content, likes=:likes " +
                 "where id=:id";
 
         SqlParameterSource param = new MapSqlParameterSource()
@@ -53,6 +53,7 @@ public class JdbcPostRepository implements PostRepository {
                 .addValue("side", updateDto.getSide())
                 .addValue("relationship", updateDto.getRelationship())
                 .addValue("content", updateDto.getContent())
+                .addValue("likes", updateDto.getLikes())
                 .addValue("id", postId);
 
         template.update(sql, param);
@@ -60,7 +61,7 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public Optional<Post> findById(Long postId) {
-        String sql = "select id, author, password, side, relationship, content from post where id = :id";
+        String sql = "select id, author, password, side, relationship, content, likes from post where id = :id";
         try {
             Map<String, Object> param = Map.of("id", postId);
             Post post = template.queryForObject(sql, param, postRowMapper());
@@ -80,7 +81,7 @@ public class JdbcPostRepository implements PostRepository {
         boolean sideFlag = StringUtils.hasText(side);
         boolean relationshipFlag = StringUtils.hasText(relationship);
 
-        String sql = "select id, author, password, side, relationship, content from post";
+        String sql = "select id, author, password, side, relationship, content, likes from post";
 
         // 동적 쿼리 =========================================
         // 하나라도 값이 있을 경우

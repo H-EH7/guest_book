@@ -14,15 +14,17 @@ public class PostUpdateDto {
     private String side;        // 어느 측(신랑/신부)인지
     private String relationship;// 관계
     private String content;     // 글 내용
+    private Long likes;          // 좋아요
 
     public PostUpdateDto() {
     }
 
-    public PostUpdateDto(String author, String password, String side, String relationship, String content) {
+    public PostUpdateDto(String author, String password, String side, String relationship, String content, Long likes) {
         this.author = author;
         this.password = password;
         this.side = side;
         this.relationship = relationship;
         this.content = content;
+        this.likes = likes;
     }
 }

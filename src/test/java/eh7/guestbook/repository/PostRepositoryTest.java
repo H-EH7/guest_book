@@ -54,7 +54,7 @@ class PostRepositoryTest {
         Long postId = savedPost.getId();
 
         // when
-        PostUpdateDto updateDto = new PostUpdateDto("changed", "test111", SideConst.BRIDE, RelationshipConst.ETC, "변경된 콘텐츠입니다.");
+        PostUpdateDto updateDto = new PostUpdateDto("changed", "test111", SideConst.BRIDE, RelationshipConst.ETC, "변경된 콘텐츠입니다.", 0L);
         postRepository.update(postId, updateDto);
 
         // then
@@ -66,6 +66,7 @@ class PostRepositoryTest {
         assertThat(findPost.getSide()).isEqualTo(updateDto.getSide());
         assertThat(findPost.getRelationship()).isEqualTo(updateDto.getRelationship());
         assertThat(findPost.getContent()).isEqualTo(updateDto.getContent());
+        assertThat(findPost.getLikes()).isEqualTo(updateDto.getLikes());
     }
 
     @Test

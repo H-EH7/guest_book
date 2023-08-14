@@ -49,7 +49,7 @@ class PostServiceTest {
     void edit() {
         // given
         Post post = postRepository.save(new Post("test", "1111", GROOM, FAMILY, "테스트입니다."));
-        PostUpdateDto updateDto = new PostUpdateDto("test1", "1111", GROOM, FRIEND, "변경된 콘텐츠입니다.");
+        PostUpdateDto updateDto = new PostUpdateDto("test1", "1111", GROOM, FRIEND, "변경된 콘텐츠입니다.", 0L);
 
         // when
         postService.edit(post.getId(), updateDto);
@@ -60,6 +60,7 @@ class PostServiceTest {
         assertThat(findPost.getSide()).isEqualTo(updateDto.getSide());
         assertThat(findPost.getRelationship()).isEqualTo(updateDto.getRelationship());
         assertThat(findPost.getContent()).isEqualTo(updateDto.getContent());
+        assertThat(findPost.getLikes()).isEqualTo(updateDto.getLikes());
     }
 
     @Test
@@ -120,7 +121,7 @@ class PostServiceTest {
         // 패스워드가 틀릴 경우
         // 수정 시 확인
         assertThatThrownBy(() -> {
-            postService.edit(post.getId(), new PostUpdateDto("test2", "2222", BRIDE, FRIEND, "변경 테스트입니다."));
+            postService.edit(post.getId(), new PostUpdateDto("test2", "2222", BRIDE, FRIEND, "변경 테스트입니다.", 0L));
         }).isInstanceOf(IllegalPasswordException.class);
         // 삭제 시 확인
         assertThatThrownBy(() -> {
@@ -147,11 +148,11 @@ class PostServiceTest {
         // 수정 시 확인
         // Side
         assertThatThrownBy(() -> {
-            postService.edit(post.getId(), new PostUpdateDto("testA", "1111", "WrongSide", FRIEND, "수정 테스트입니다."));
+            postService.edit(post.getId(), new PostUpdateDto("testA", "1111", "WrongSide", FRIEND, "수정 테스트입니다.", 0L));
         }).isInstanceOf(IllegalConstException.class);
         // Relationship
         assertThatThrownBy(() -> {
-            postService.edit(post.getId(), new PostUpdateDto("testB", "1111", BRIDE, "WrongRelationship", "수정 테스트입니다."));
+            postService.edit(post.getId(), new PostUpdateDto("testB", "1111", BRIDE, "WrongRelationship", "수정 테스트입니다.", 0L));
         }).isInstanceOf(IllegalConstException.class);
     }
 }

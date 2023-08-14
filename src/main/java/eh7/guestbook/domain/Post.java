@@ -14,6 +14,7 @@ public class Post {
     private String side;          // 어느 측(신랑/신부)인지
     private String relationship; // 관계
     private String content;     // 글 내용
+    private Long likes;         // 좋아요
 
     public Post() {
     }
@@ -24,5 +25,6 @@ public class Post {
         this.side = side;
         this.relationship = relationship;
         this.content = content;
+        this.likes = 0L;
     }
 }
