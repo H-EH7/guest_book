@@ -75,7 +75,7 @@ class LikeServiceTest {
         Like savedLike = likeService.like(savedPost.getId(), addr);
 
         // when
-        likeService.unlike(savedLike.getId(), savedPost.getId());
+        likeService.unlike(savedLike.getId(), addr);
 
         // then
         assertThatThrownBy(() -> {

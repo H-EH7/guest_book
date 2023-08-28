@@ -54,8 +54,13 @@ public class LikeService {
     }
 
     @Transactional
-    public void unlike(Long likeId, Long postId) {
+    public void unlike(Long postId, String address) {
         Post post = postRepository.findById(postId).get();
+        List<Like> likes = likeRepository.findByPostId(postId);
+
+        Long likeId = likes.stream().filter((like) -> {
+            return like.getAddress().equals(address);
+        }).findAny().get().getId();
         likeRepository.delete(likeId);
 
         PostUpdateDto postUpdateDto = createPostUpdateDto(post);
