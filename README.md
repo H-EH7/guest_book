@@ -24,7 +24,7 @@
 
 `글 삭제`: 비밀번호로 글을 삭제할 수 있음
 
-`좋아요`: ip 당 한 글에 한 번 좋아요를 누를 수 있음 - ***추후 추가 예정***
+`좋아요`: ip 당 한 글에 한 번 좋아요를 누를 수 있음
 
 ----------
 
@@ -95,33 +95,47 @@
 ## 🗂 패키지 구조
 
 ```bash
-  eh7
+   eh7
     └─guestbook
         │  GuestbookApplication.java
-        │  
+        │
         ├─controller
-        │     PostController.java
-        │      
+        │  │  LikeController.java
+        │  │  PostController.java
+        │  │  ViewController.java
+        │  │
+        │  └─advice
+        │          PostControllerAdvice.java
+        │
         ├─domain
+        │  │  Like.java
         │  │  Post.java
-        │  │  
+        │  │
         │  └─consts
-        │       RelationshipConst.java
-        │       SideConst.java
-        │          
+        │          RelationshipConst.java
+        │          SideConst.java
+        │
+        ├─exception
+        │      ErrorResult.java
+        │      IllegalConstException.java
+        │      IllegalIdException.java
+        │      IllegalPasswordException.java
+        │
         ├─repository
+        │  │  LikeRepository.java
         │  │  PostRepository.java
         │  │  PostSearchCond.java
-        │  │  
+        │  │
         │  ├─dto
-        │  │    PostSaveDto.java
-        │  │    PostUpdateDto.java
-        │  │      
+        │  │      PostUpdateDto.java
+        │  │
         │  └─jdbc
-        │       JdbcPostRepository.java
-        │          
+        │          JdbcLikeRepository.java
+        │          JdbcPostRepository.java
+        │
         └─service
-              PostService.java
+                LikeService.java
+                PostService.java
 ```
 
 ----------
