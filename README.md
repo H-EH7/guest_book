@@ -59,6 +59,12 @@
 > }
 > ```
 
+> `/likes/{postId}` : 좋아요<br>
+> 해당 postId의 게시글에 좋아요<br>
+> ip에 따라 이미 좋아요를 눌렀는지 여부 확인 후<br>
+> 누른적 없으면 좋아요<br>
+> 누른적 있으면 좋아요 취소
+
 ### `PATCH`
 > `/posts/{postId}` : 게시글 수정<br>
 > - Request Body
