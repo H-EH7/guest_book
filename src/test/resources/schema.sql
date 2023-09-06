@@ -8,7 +8,7 @@ create table post
     side            varchar(5),
     relationship    varchar(10),
     content         varchar(255) not null,
-    likes           int,
+    likes           int default 0,
     primary key (id)
 );
 

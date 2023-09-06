@@ -36,6 +36,7 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public Post save(Post post) {
+        post.setLikes(0L);
         SqlParameterSource param = new BeanPropertySqlParameterSource(post);
         Number key = jdbcInsert.executeAndReturnKey(param); // PK 값
         post.setId(key.longValue());

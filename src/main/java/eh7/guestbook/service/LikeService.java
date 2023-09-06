@@ -69,6 +69,10 @@ public class LikeService {
         postRepository.update(postId, postUpdateDto);
     }
 
+    public List<Like> findAllByPostId(Long postId) {
+        return likeRepository.findByPostId(postId);
+    }
+
     private PostUpdateDto createPostUpdateDto(Post post) {
         PostUpdateDto postUpdateDto = new PostUpdateDto();
         postUpdateDto.setAuthor(post.getAuthor());

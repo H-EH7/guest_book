@@ -28,7 +28,7 @@ public class PostController {
     }
 
     @PostMapping
-    public Post post(@RequestBody Post post) {
+    public Post post(Post post) {
         return postService.post(post);
     }
 

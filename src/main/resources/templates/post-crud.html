@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>CRUD 페이지</h1>
+<a href="..">처음으로</a>
+
+<h2>Post 등록</h2>
+<form action="/posts" method="POST">
+    <div>
+        <label for="author">작성자 : </label>
+        <input type="text" id="author" name="author">
+    </div>
+    <div>
+        <label for="password">비밀번호 : </label>
+        <input type="password" id="password" name="password">
+    </div>
+    <div>
+        <label>하객 구분 : </label>
+        <input type="radio" name="side" value="신랑">신랑
+        <input type="radio" name="side" value="신부">신부
+    </div>
+    <div>
+        <label>관계 : </label>
+        <input type="radio" name="relationship" value="가족">가족
+        <input type="radio" name="relationship" value="친구">친구
+        <input type="radio" name="relationship" value="직장동료">직장동료
+        <input type="radio" name="relationship" value="지인">지인
+    </div>
+    <div>
+        <label for="content">내용 : </label>
+        <input type="text" id="content" name="content">
+    </div>
+    <div>
+        <button>제출</button>
+    </div>
+</form>
+</body>
+</html>

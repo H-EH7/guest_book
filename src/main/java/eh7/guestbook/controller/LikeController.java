@@ -17,7 +17,7 @@ public class LikeController {
 
     @PostMapping("/{postId}")
     public void like(@PathVariable Long postId, HttpServletRequest request) {
-        String addr = request.getLocalAddr();
+        String addr = request.getRemoteAddr();
         if (likeService.alreadyLike(postId, addr)) {
             likeService.unlike(postId, addr);
         } else {
